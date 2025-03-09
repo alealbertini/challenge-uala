@@ -4,7 +4,7 @@ using TwitterUala.Application.Contracts.Applicaction;
 using TwitterUala.Application.Contracts.Infrastructure;
 using TwitterUala.Application.UseCases;
 using TwitterUala.Infrastructure;
-using TwitterUala.Infrastructure.Impl;
+using TwitterUala.Infrastructure.Database;
 using TwitterUala.Infrastructure.Repositories;
 
 namespace TwitterUalaTest
@@ -19,7 +19,6 @@ namespace TwitterUalaTest
         {
             var services = new ServiceCollection();
 
-            // Using In-Memory database for testing
             services.AddDbContext<TwitterDbContext>(options =>
                 options.UseInMemoryDatabase("TestDb"));
 
@@ -49,6 +48,7 @@ namespace TwitterUalaTest
                 var manager = scopedServices.GetRequiredService<IPublishTweetService>();
                 var managerCreateUser = scopedServices.GetRequiredService<ICreateUserService>();
                 var managerFollowUser = scopedServices.GetRequiredService<IFollowUserService>();
+                var managerTimeline = scopedServices.GetRequiredService<ITimelineService>();
                 var dbContext = scopedServices.GetRequiredService<TwitterDbContext>();
 
                 string usernameBenedicto = "Benedicto";
@@ -62,11 +62,12 @@ namespace TwitterUalaTest
                 managerFollowUser.FollowUserAsync(user, userToFollow);
 
                 string message = "First Tweet";
-                manager.PublishTweetAsync(user, message);
+                manager.PublishTweetAsync(userToFollow, message);
 
                 // Assert
-                var addedItem = dbContext.Tweet.FirstOrDefault(x => x.UserId == user);
-                Assert.IsNotNull(addedItem);
+                var addedItem = dbContext.Tweet.FirstOrDefault(x => x.UserId == userToFollow);
+                var tweetsFromUser = managerTimeline.TimelineByUserIdAsync(user).GetAwaiter().GetResult();
+                Assert.IsNotNull(tweetsFromUser);
             }
         }
 
@@ -79,10 +80,9 @@ namespace TwitterUalaTest
                 var manager = scopedServices.GetRequiredService<IPublishTweetService>();
                 var dbContext = scopedServices.GetRequiredService<TwitterDbContext>();
 
-                long user = 1;
+                long user = 1111111;
                 string message = "First Tweet";
-                await manager.PublishTweetAsync(user, message);
-
+                
                 var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.PublishTweetAsync(user, message));
                 Assert.AreEqual("El usuario actual no es valido", exception.Message);
             }

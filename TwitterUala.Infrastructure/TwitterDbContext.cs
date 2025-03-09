@@ -43,10 +43,6 @@ namespace TwitterUala.Infrastructure
 
                 entity.HasIndex(e => new { e.UserId, e.UsersToFollowId }, "IX_Following_UserId_UsersToFollowId");
 
-                /*                entity.HasKey(e => e.IdFollowing);
-
-                                entity.Property(e => e.IdFollowing)
-                                    .ValueGeneratedOnAdd();*/
                 entity.Ignore(f => f.TweetsUser)
                 .HasMany(f => f.TweetsUser)
                 .WithOne(t => t.Following)

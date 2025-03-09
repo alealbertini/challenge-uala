@@ -4,7 +4,7 @@ using TwitterUala.Application.Contracts.Applicaction;
 using TwitterUala.Application.Contracts.Infrastructure;
 using TwitterUala.Application.UseCases;
 using TwitterUala.Infrastructure;
-using TwitterUala.Infrastructure.Impl;
+using TwitterUala.Infrastructure.Database;
 using TwitterUala.Infrastructure.Repositories;
 
 namespace TwitterUalaTest
@@ -19,13 +19,11 @@ namespace TwitterUalaTest
         {
             var services = new ServiceCollection();
 
-            // Using In-Memory database for testing
             services.AddDbContext<TwitterDbContext>(options =>
                 options.UseInMemoryDatabase("TestDb"));
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-            //services.AddScoped<DbContext, DbInMemoryContext>();
             services.AddScoped<DbContext, TwitterDbContext>();
 
             services.AddLogging();
@@ -50,9 +48,7 @@ namespace TwitterUalaTest
                 var manager = scopedServices.GetRequiredService<ITimelineService>();
                 var dbContext = scopedServices.GetRequiredService<TwitterDbContext>();
 
-                long user = 1;
-                await manager.TimelineByUserIdAsync(user);
-
+                long user = 111111;
                 var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.TimelineByUserIdAsync(user));
                 Assert.AreEqual("El usuario actual no es válido", exception.Message);
             }
@@ -70,39 +66,38 @@ namespace TwitterUalaTest
                 var manager = scopedServices.GetRequiredService<ITimelineService>();
                 var dbContext = scopedServices.GetRequiredService<TwitterDbContext>();
 
-                string usernameBenedicto = "Benedicto";
+                string usernameBenedicto = "Ernesto";
                 managerCreateUser.CreateUserAsync(usernameBenedicto);
 
-                string usernameAmanda = "Amanda";
+                string usernameAmanda = "Olivia";
                 managerCreateUser.CreateUserAsync(usernameAmanda);
 
-                long user = 1;
-                long userToFollow = 2;
+                long user = 3;
+                long userToFollow = 4;
                 managerFollowUser.FollowUserAsync(user, userToFollow);
 
                 string message = "First Tweet";
-                managerPublishTweet.PublishTweetAsync(userToFollow, message);
+                managerPublishTweet.PublishTweetAsync(userToFollow, message).GetAwaiter().GetResult();
 
                 // Assert
-                var tweetsFromUserToFollow = manager.TimelineByUserIdAsync(user).GetAwaiter().GetResult();
-                Assert.IsNotNull(tweetsFromUserToFollow);
-                Assert.AreEqual(tweetsFromUserToFollow.Count, 1);
-                Assert.AreEqual(tweetsFromUserToFollow.First().UserId, userToFollow);
-                Assert.AreEqual(tweetsFromUserToFollow.First().TweetMessage, message);
+                var tweetsFromUser = manager.TimelineByUserIdAsync(user).GetAwaiter().GetResult();
+                Assert.AreEqual(1, tweetsFromUser.Count);
+                Assert.AreEqual(tweetsFromUser.First().UserId, userToFollow);
+                Assert.AreEqual(tweetsFromUser.First().TweetMessage, message);
 
                 string secondMessage = "Second Tweet";
                 managerPublishTweet.PublishTweetAsync(userToFollow, secondMessage);
 
-                tweetsFromUserToFollow = manager.TimelineByUserIdAsync(user).GetAwaiter().GetResult();
-                Assert.AreEqual(tweetsFromUserToFollow.Count, 2);
-                var existSecondMessage = tweetsFromUserToFollow.FirstOrDefault(t => t.UserId == userToFollow && t.TweetMessage == secondMessage);
+                tweetsFromUser = manager.TimelineByUserIdAsync(user).GetAwaiter().GetResult();
+                Assert.AreEqual(tweetsFromUser.Count, 2);
+                var existSecondMessage = tweetsFromUser.FirstOrDefault(t => t.UserId == userToFollow && t.TweetMessage == secondMessage);
                 Assert.IsNotNull(existSecondMessage);
 
                 string messageUser1 = "First Tweet from user 1";
                 managerPublishTweet.PublishTweetAsync(user, messageUser1);
 
-                var tweetsFromUser = manager.TimelineByUserIdAsync(user).GetAwaiter().GetResult();
-                tweetsFromUserToFollow = manager.TimelineByUserIdAsync(userToFollow).GetAwaiter().GetResult();
+                tweetsFromUser = manager.TimelineByUserIdAsync(user).GetAwaiter().GetResult();
+                var tweetsFromUserToFollow = manager.TimelineByUserIdAsync(userToFollow).GetAwaiter().GetResult();
                 Assert.AreEqual(tweetsFromUser.Count, 2);
                 Assert.AreEqual(tweetsFromUserToFollow.Count, 0);
 

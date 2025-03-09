@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using TwitterUala.Application.Contracts.Infrastructure;
 
-namespace TwitterUala.Infrastructure.Impl
+namespace TwitterUala.Infrastructure.Database
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {

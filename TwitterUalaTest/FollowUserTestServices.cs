@@ -4,7 +4,7 @@ using TwitterUala.Application.Contracts.Applicaction;
 using TwitterUala.Application.Contracts.Infrastructure;
 using TwitterUala.Application.UseCases;
 using TwitterUala.Infrastructure;
-using TwitterUala.Infrastructure.Impl;
+using TwitterUala.Infrastructure.Database;
 using TwitterUala.Infrastructure.Repositories;
 
 namespace TwitterUalaTest
@@ -19,7 +19,6 @@ namespace TwitterUalaTest
         {
             var services = new ServiceCollection();
 
-            // Using In-Memory database for testing
             services.AddDbContext<TwitterDbContext>(options =>
                 options.UseInMemoryDatabase("TestDb"));
 
