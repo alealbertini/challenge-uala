@@ -1,0 +1,6 @@
+@TwitterUala_HostAddress = http://localhost:5275
+
+GET {{TwitterUala_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
