@@ -1,7 +1,9 @@
-﻿namespace TwitterUala.Application.Contracts.Applicaction
+﻿using TwitterUala.Application.Dtos;
+
+namespace TwitterUala.Application.Contracts.Applicaction
 {
     public interface IFollowUserService
     {
-        Task FollowUserAsync(long userId, long userToFollowId);
+        Task<FollowingDto> FollowUserAsync(long userId, long userToFollowId);
     }
 }

@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using TwitterUala.Application.Contracts.Applicaction;
 using TwitterUala.Application.Contracts.Infrastructure;
+using TwitterUala.Application.Dtos;
+using TwitterUala.Application.Mappers;
 using TwitterUala.Domain.Entities;
 
 namespace TwitterUala.Application.UseCases
@@ -11,7 +13,7 @@ namespace TwitterUala.Application.UseCases
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly ILogger<PublishTweetService> _logger = logger;
 
-        public async Task PublishTweetAsync(long userId, string tweetMessage)
+        public async Task<TweetDto> PublishTweetAsync(long userId, string tweetMessage)
         {
             var validUser = await _unitOfWork.GetRepository<User>().FirstOrDefaultAsync(u => u.IdUser == userId);
             if (validUser == null)
@@ -37,6 +39,9 @@ namespace TwitterUala.Application.UseCases
             await _unitOfWork.GetRepository<Tweet>().Add(tweet);
             await _unitOfWork.SaveChangesAsync();
             _logger.LogInformation("Se publicó el tweet para el usuario: {0}", JsonConvert.SerializeObject(tweet));
+
+            TweetDto tweetDto = TweetMapper.ToDto(tweet);
+            return tweetDto;
         }
     }
 }

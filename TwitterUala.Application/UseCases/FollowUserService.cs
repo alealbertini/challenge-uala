@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using TwitterUala.Application.Contracts.Applicaction;
 using TwitterUala.Application.Contracts.Infrastructure;
+using TwitterUala.Application.Dtos;
+using TwitterUala.Application.Mappers;
 using TwitterUala.Domain.Entities;
 
 namespace TwitterUala.Application.UseCases
@@ -11,7 +13,23 @@ namespace TwitterUala.Application.UseCases
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly ILogger<FollowUserService> _logger = logger;
 
-        public async Task FollowUserAsync(long userId, long userToFollowId)
+        public async Task<FollowingDto> FollowUserAsync(long userId, long userToFollowId)
+        {
+            await ExecValidationsAsync(userId, userToFollowId);
+
+            Following following = new Following();
+            following.UserId = userId;
+            following.UserToFollowId = userToFollowId;
+
+            await _unitOfWork.GetRepository<Following>().Add(following);
+            await _unitOfWork.SaveChangesAsync();
+            _logger.LogInformation("Usuario seguido: {0}", JsonConvert.SerializeObject(following));
+
+            FollowingDto followingDto = FollowingMapper.ToDto(following);
+            return followingDto;
+        }
+
+        private async Task ExecValidationsAsync(long userId, long userToFollowId)
         {
             var validUser = await _unitOfWork.GetRepository<User>().FirstOrDefaultAsync(u => u.IdUser == userId);
             if (validUser == null)
@@ -29,14 +47,6 @@ namespace TwitterUala.Application.UseCases
             {
                 throw new InvalidDataException("El usuario actual no puede seguirse a si mismo");
             }
-
-            Following following = new Following();
-            following.UserId = userId;
-            following.UserToFollowId = userToFollowId;
-
-            await _unitOfWork.GetRepository<Following>().Add(following);
-            await _unitOfWork.SaveChangesAsync();
-            _logger.LogInformation("Usuario seguido: {0}", JsonConvert.SerializeObject(following));
         }
     }
 }

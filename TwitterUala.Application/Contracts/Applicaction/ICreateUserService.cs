@@ -1,7 +1,9 @@
-﻿namespace TwitterUala.Application.Contracts.Applicaction
+﻿using TwitterUala.Application.Dtos;
+
+namespace TwitterUala.Application.Contracts.Applicaction
 {
     public interface ICreateUserService
     {
-        public Task CreateUserAsync(string username);
+        public Task<UserDto> CreateUserAsync(string username);
     }
 }

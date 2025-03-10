@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using TwitterUala.Application.Contracts.Applicaction;
 using TwitterUala.Application.Contracts.Infrastructure;
+using TwitterUala.Application.Dtos;
+using TwitterUala.Application.Mappers;
 using TwitterUala.Domain.Entities;
 
 namespace TwitterUala.Application.UseCases
@@ -11,7 +13,7 @@ namespace TwitterUala.Application.UseCases
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly ILogger<CreateUserService> _logger = logger;
 
-        public async Task CreateUserAsync(string username)
+        public async Task<UserDto> CreateUserAsync(string username)
         {
             if (username.Length <= 0)
             {
@@ -35,6 +37,9 @@ namespace TwitterUala.Application.UseCases
             await _unitOfWork.GetRepository<User>().Add(user);
             await _unitOfWork.SaveChangesAsync();
             _logger.LogInformation("Usuario insertado: {0}", JsonConvert.SerializeObject(user));
+
+            UserDto userDto = UserMapper.ToDto(user);
+            return userDto;
         }
     }
 }

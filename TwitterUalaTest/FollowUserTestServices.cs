@@ -5,6 +5,7 @@ using TwitterUala.Application.Contracts.Infrastructure;
 using TwitterUala.Application.UseCases;
 using TwitterUala.Infrastructure;
 using TwitterUala.Infrastructure.Database;
+using TwitterUala.Infrastructure.Handlers;
 using TwitterUala.Infrastructure.Repositories;
 
 namespace TwitterUalaTest
@@ -72,7 +73,6 @@ namespace TwitterUalaTest
             {
                 var scopedServices = scope.ServiceProvider;
                 var manager = scopedServices.GetRequiredService<IFollowUserService>();
-                var dbContext = scopedServices.GetRequiredService<TwitterDbContext>();
 
                 long user = 11111;
                 long userToFollow = 2;
@@ -89,10 +89,9 @@ namespace TwitterUalaTest
                 var scopedServices = scope.ServiceProvider;
                 var manager = scopedServices.GetRequiredService<IFollowUserService>();
                 var managerCreateUser = scopedServices.GetRequiredService<ICreateUserService>();
-                var dbContext = scopedServices.GetRequiredService<TwitterDbContext>();
 
-                string usernameBenedicto = "Benedicto";
-                managerCreateUser.CreateUserAsync(usernameBenedicto);
+                string usernameRaul = "Raul";
+                await managerCreateUser.CreateUserAsync(usernameRaul);
 
                 long user = 1;
                 long userToFollow = 222222;
@@ -109,14 +108,12 @@ namespace TwitterUalaTest
                 var scopedServices = scope.ServiceProvider;
                 var manager = scopedServices.GetRequiredService<IFollowUserService>();
                 var managerCreateUser = scopedServices.GetRequiredService<ICreateUserService>();
-                var dbContext = scopedServices.GetRequiredService<TwitterDbContext>();
 
-                string usernameBenedicto = "Benedicto";
-                managerCreateUser.CreateUserAsync(usernameBenedicto);
+                string usernameSebastian = "Sebastian";
+                await managerCreateUser.CreateUserAsync(usernameSebastian);
 
                 long user = 1;
                 long userToFollow = 1;
-                manager.FollowUserAsync(user, userToFollow);
 
                 var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.FollowUserAsync(user, userToFollow));
                 Assert.AreEqual("El usuario actual no puede seguirse a si mismo", exception.Message);

@@ -5,6 +5,7 @@ using TwitterUala.Application.Contracts.Infrastructure;
 using TwitterUala.Application.UseCases;
 using TwitterUala.Infrastructure;
 using TwitterUala.Infrastructure.Database;
+using TwitterUala.Infrastructure.Handlers;
 using TwitterUala.Infrastructure.Repositories;
 
 namespace TwitterUalaTest
@@ -51,7 +52,6 @@ namespace TwitterUalaTest
                 string username = "Benedicto";
                 manager.CreateUserAsync(username);
 
-                // Assert
                 var addedItem = dbContext.User.Find((long)1);
                 Assert.IsNotNull(addedItem);
                 Assert.AreEqual(username, addedItem.Username);
@@ -65,7 +65,6 @@ namespace TwitterUalaTest
             {
                 var scopedServices = scope.ServiceProvider;
                 var manager = scopedServices.GetRequiredService<ICreateUserService>();
-                var dbContext = scopedServices.GetRequiredService<TwitterDbContext>();
 
                 string username = "";
                 var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.CreateUserAsync(username));
@@ -80,7 +79,6 @@ namespace TwitterUalaTest
             {
                 var scopedServices = scope.ServiceProvider;
                 var manager = scopedServices.GetRequiredService<ICreateUserService>();
-                var dbContext = scopedServices.GetRequiredService<TwitterDbContext>();
 
                 string longUsername = new string('a', 51);
                 var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.CreateUserAsync(longUsername));
@@ -95,10 +93,9 @@ namespace TwitterUalaTest
             {
                 var scopedServices = scope.ServiceProvider;
                 var manager = scopedServices.GetRequiredService<ICreateUserService>();
-                var dbContext = scopedServices.GetRequiredService<TwitterDbContext>();
 
                 string username = "Benedicto";
-                manager.CreateUserAsync(username);
+                await manager.CreateUserAsync(username);
 
                 var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.CreateUserAsync(username));
                 Assert.AreEqual("Ya existe un usuario con el mismo nombre de usuario", exception.Message);

@@ -4,40 +4,43 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Net;
 
-public sealed class ExceptionHandler(ILogger<ExceptionHandler> logger) : IExceptionHandler
+namespace TwitterUala.Infrastructure.Handlers 
 {
-    private readonly ILogger<ExceptionHandler> _logger = logger;
-
-    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+    public sealed class ExceptionHandler(ILogger<ExceptionHandler> logger) : IExceptionHandler
     {
-        var result = new ProblemDetails();
-        switch (exception)
+        private readonly ILogger<ExceptionHandler> _logger = logger;
+
+        public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
         {
-            case InvalidDataException invalidDataException:
-                httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                result = new ProblemDetails
-                {
-                    Status = (int)HttpStatusCode.BadRequest,
-                    Type = invalidDataException.GetType().Name,
-                    Title = "Invalid parameters",
-                    Detail = invalidDataException.Message,
-                    Instance = $"{httpContext.Request.Method} {httpContext.Request.Path}",
-                };
-                _logger.LogError(invalidDataException, $"Exception occured : {invalidDataException.Message}");
-                break;
-            default:
-                result = new ProblemDetails
-                {
-                    Status = (int)HttpStatusCode.InternalServerError,
-                    Type = exception.GetType().Name,
-                    Title = "An unexpected error occurred",
-                    Detail = exception.Message,
-                    Instance = $"{httpContext.Request.Method} {httpContext.Request.Path}"
-                };
-                _logger.LogError(exception, $"Exception occured : {exception.Message}");
-                break;
+            var result = new ProblemDetails();
+            switch (exception)
+            {
+                case InvalidDataException invalidDataException:
+                    httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    result = new ProblemDetails
+                    {
+                        Status = (int)HttpStatusCode.BadRequest,
+                        Type = invalidDataException.GetType().Name,
+                        Title = "Invalid parameters",
+                        Detail = invalidDataException.Message,
+                        Instance = $"{httpContext.Request.Method} {httpContext.Request.Path}",
+                    };
+                    _logger.LogError(invalidDataException, "Exception occured : {0}", invalidDataException.Message);
+                    break;
+                default:
+                    result = new ProblemDetails
+                    {
+                        Status = (int)HttpStatusCode.InternalServerError,
+                        Type = exception.GetType().Name,
+                        Title = "An unexpected error occurred",
+                        Detail = exception.Message,
+                        Instance = $"{httpContext.Request.Method} {httpContext.Request.Path}"
+                    };
+                    _logger.LogError(exception, "Exception occured : {0}", exception.Message);
+                    break;
+            }
+            await httpContext.Response.WriteAsJsonAsync(result, cancellationToken: cancellationToken);
+            return true;
         }
-        await httpContext.Response.WriteAsJsonAsync(result, cancellationToken: cancellationToken);
-        return true;
     }
 }

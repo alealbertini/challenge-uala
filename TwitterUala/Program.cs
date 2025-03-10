@@ -4,6 +4,7 @@ using TwitterUala.Application.Contracts.Infrastructure;
 using TwitterUala.Application.UseCases;
 using TwitterUala.Infrastructure;
 using TwitterUala.Infrastructure.Database;
+using TwitterUala.Infrastructure.Handlers;
 using TwitterUala.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);

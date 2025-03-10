@@ -5,6 +5,7 @@ using TwitterUala.Application.Contracts.Infrastructure;
 using TwitterUala.Application.UseCases;
 using TwitterUala.Infrastructure;
 using TwitterUala.Infrastructure.Database;
+using TwitterUala.Infrastructure.Handlers;
 using TwitterUala.Infrastructure.Repositories;
 
 namespace TwitterUalaTest
@@ -49,7 +50,6 @@ namespace TwitterUalaTest
                 var managerCreateUser = scopedServices.GetRequiredService<ICreateUserService>();
                 var managerFollowUser = scopedServices.GetRequiredService<IFollowUserService>();
                 var managerTimeline = scopedServices.GetRequiredService<ITimelineService>();
-                var dbContext = scopedServices.GetRequiredService<TwitterDbContext>();
 
                 string usernameBenedicto = "Benedicto";
                 managerCreateUser.CreateUserAsync(usernameBenedicto);
@@ -64,8 +64,6 @@ namespace TwitterUalaTest
                 string message = "First Tweet";
                 manager.PublishTweetAsync(userToFollow, message);
 
-                // Assert
-                var addedItem = dbContext.Tweet.FirstOrDefault(x => x.UserId == userToFollow);
                 var tweetsFromUser = managerTimeline.TimelineByUserIdAsync(user).GetAwaiter().GetResult();
                 Assert.IsNotNull(tweetsFromUser);
             }
@@ -78,7 +76,6 @@ namespace TwitterUalaTest
             {
                 var scopedServices = scope.ServiceProvider;
                 var manager = scopedServices.GetRequiredService<IPublishTweetService>();
-                var dbContext = scopedServices.GetRequiredService<TwitterDbContext>();
 
                 long user = 1111111;
                 string message = "First Tweet";
@@ -96,14 +93,12 @@ namespace TwitterUalaTest
                 var scopedServices = scope.ServiceProvider;
                 var manager = scopedServices.GetRequiredService<IPublishTweetService>();
                 var managerCreateUser = scopedServices.GetRequiredService<ICreateUserService>();
-                var dbContext = scopedServices.GetRequiredService<TwitterDbContext>();
 
-                string usernameBenedicto = "Benedicto";
-                managerCreateUser.CreateUserAsync(usernameBenedicto);
+                string usernameNicolas = "Nicolas";
+                await managerCreateUser.CreateUserAsync(usernameNicolas);
 
                 long user = 1;
                 string message = "";
-                manager.PublishTweetAsync(user, message);
 
                 var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.PublishTweetAsync(user, message));
                 Assert.AreEqual("El mensaje no puede ser vacío", exception.Message);
@@ -118,14 +113,12 @@ namespace TwitterUalaTest
                 var scopedServices = scope.ServiceProvider;
                 var manager = scopedServices.GetRequiredService<IPublishTweetService>();
                 var managerCreateUser = scopedServices.GetRequiredService<ICreateUserService>();
-                var dbContext = scopedServices.GetRequiredService<TwitterDbContext>();
 
-                string usernameBenedicto = "Benedicto";
-                managerCreateUser.CreateUserAsync(usernameBenedicto);
+                string usernameRicardo = "Ricardo";
+                await managerCreateUser.CreateUserAsync(usernameRicardo);
 
                 long user = 1;
                 string message = new string('a', 281);
-                manager.PublishTweetAsync(user, message);
 
                 var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.PublishTweetAsync(user, message));
                 Assert.AreEqual("El mensaje no puede ser mayor a 280 caracteres", exception.Message);

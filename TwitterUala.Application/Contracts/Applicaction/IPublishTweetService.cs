@@ -1,7 +1,9 @@
-﻿namespace TwitterUala.Application.Contracts.Applicaction
+﻿using TwitterUala.Application.Dtos;
+
+namespace TwitterUala.Application.Contracts.Applicaction
 {
     public interface IPublishTweetService
     {
-        Task PublishTweetAsync(long userId, string tweetMessage);
+        Task<TweetDto> PublishTweetAsync(long userId, string tweetMessage);
     }
 }

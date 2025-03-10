@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TwitterUala.Application.Contracts.Applicaction;
+using TwitterUala.Application.Dtos;
 
 namespace TwitterUala.Controllers
 {
@@ -11,10 +12,11 @@ namespace TwitterUala.Controllers
         private readonly ILogger<UserController> _logger = logger;
 
         [HttpPost(Name = "User")]
-        public async Task CreateUserAsync(string username)
+        public async Task<UserDto> CreateUserAsync(string username)
         {
             _logger.LogInformation("Usuario a insertar: {0}", username);
-            await _createUserService.CreateUserAsync(username);
+            UserDto userDto = await _createUserService.CreateUserAsync(username);
+            return userDto;
         }
     }
 }

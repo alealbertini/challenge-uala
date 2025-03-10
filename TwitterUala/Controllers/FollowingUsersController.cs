@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TwitterUala.Application.Contracts.Applicaction;
+using TwitterUala.Application.Dtos;
 
 namespace TwitterUala.Controllers
 {
@@ -11,10 +12,11 @@ namespace TwitterUala.Controllers
         private readonly IFollowUserService _followUserService = followUserService;
 
         [HttpPost(Name = "FollowUser")]
-        public async Task FollowUserAsync(long userId, long userToFollowId)
+        public async Task<FollowingDto> FollowUserAsync(long userId, long userToFollowId)
         {
             _logger.LogInformation("Usuario a insertar: Usuario: {0} Usuario a seguir: {1}", userId, userToFollowId);
-            await _followUserService.FollowUserAsync(userId, userToFollowId);
+            FollowingDto followingDto = await _followUserService.FollowUserAsync(userId, userToFollowId);
+            return followingDto;
         }
     }
 }
