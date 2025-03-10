@@ -6,9 +6,11 @@ Este proyecto es una app simil Twitter para el challenge de Uala, donde se puede
 
 ## Requisitos para poder ejecutar el proyecto 
 
+```
 Docker Desktop para Windows
 Visual Studio 
 Docker
+```
 
 ## Comandos para ejecutar el proyecto 
 
