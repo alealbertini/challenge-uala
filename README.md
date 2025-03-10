@@ -32,11 +32,13 @@ docker container ls
 ```
 Luego, ejecutar el proyecto en Visual Studio. El archivo TwitterUala.sln para abrir la solución, se encuentra adentro de la carpeta TwitterUala. Se debe compilar y levantar con el profile Container (dockerfile) y se pueden consumir los endpoints a través del swagger que aparece al levantar la aplicación.
 
-Ayuda:
-Al levantar la aplicación, se ejecutarán los scripts de Migration que crearan el modelo de base de datos en el container de postgres. Si la base de datos no se creó al levantar el proyecto, ejecutar el siguiente comando en el Package Manager Console:
-
+Si desea ver la base de datos con una interfaz visual, se puede conectar generando una conexión de PostgreSQL con los siguientes datos:
 ```
-Add-Migration InitialCreate
+host: localhost
+database: postgres
+usuario: postgres
+contraseña: uala123
+puerto: 5432
 ```
 
 ## Ejecutar los tests
