@@ -28,15 +28,15 @@ namespace TwitterUala.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("user_id");
 
-                    b.Property<long>("UsersToFollowId")
+                    b.Property<long>("UserToFollowId")
                         .HasColumnType("bigint")
-                        .HasColumnName("users_to_follow_id");
+                        .HasColumnName("user_to_follow_id");
 
-                    b.HasKey("UserId", "UsersToFollowId");
+                    b.HasKey("UserId", "UserToFollowId");
 
-                    b.HasIndex(new[] { "UserId", "UsersToFollowId" }, "IX_Following_UserId_UsersToFollowId");
+                    b.HasIndex(new[] { "UserId", "UserToFollowId" }, "IX_Following_UserId_UsersToFollowId");
 
-                    b.HasIndex(new[] { "UsersToFollowId" }, "IX_Following_UsersToFollowId");
+                    b.HasIndex(new[] { "UserToFollowId" }, "IX_Following_UsersToFollowId");
 
                     b.ToTable("following", (string)null);
                 });
@@ -53,7 +53,7 @@ namespace TwitterUala.Migrations
                     b.Property<long?>("FollowingUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("FollowingUsersToFollowId")
+                    b.Property<long?>("FollowingUserToFollowId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("TweetMessage")
@@ -72,7 +72,7 @@ namespace TwitterUala.Migrations
 
                     b.HasKey("IdTweet");
 
-                    b.HasIndex("FollowingUserId", "FollowingUsersToFollowId");
+                    b.HasIndex("FollowingUserId", "FollowingUserToFollowId");
 
                     b.HasIndex(new[] { "UserId" }, "IX_Tweet_UserId");
 
@@ -105,7 +105,7 @@ namespace TwitterUala.Migrations
                 {
                     b.HasOne("TwitterUala.Domain.Entities.Following", null)
                         .WithMany("TweetsUser")
-                        .HasForeignKey("FollowingUserId", "FollowingUsersToFollowId");
+                        .HasForeignKey("FollowingUserId", "FollowingUserToFollowId");
                 });
 
             modelBuilder.Entity("TwitterUala.Domain.Entities.Following", b =>

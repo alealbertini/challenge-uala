@@ -12,7 +12,7 @@ Visual Studio
 Docker
 ```
 
-## Comandos para ejecutar el proyecto 
+## Ejecutar el proyecto 
 
 Abrir una terminal de Windows Powershell y ejecutar los siguientes comandos:
 
@@ -34,3 +34,6 @@ Al levantar la aplicación, se ejecutarán los scripts de Migration que crearan 
 ```
 Add-Migration InitialCreate
 ```
+
+## Ejecutar los tests
+Para ejecutar todos los tests, hay que hacer click derecho en el proyecto TwiterUalaTest y seleccionar la opción Run Tests.

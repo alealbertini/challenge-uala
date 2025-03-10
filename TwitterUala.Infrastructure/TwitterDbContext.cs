@@ -37,11 +37,11 @@ namespace TwitterUala.Infrastructure
 
             modelBuilder.Entity<Following>(entity =>
             {
-                entity.HasKey(f => new { f.UserId, f.UsersToFollowId });
+                entity.HasKey(f => new { f.UserId, f.UserToFollowId });
 
-                entity.HasIndex(e => e.UsersToFollowId, "IX_Following_UsersToFollowId");
+                entity.HasIndex(e => e.UserToFollowId, "IX_Following_UsersToFollowId");
 
-                entity.HasIndex(e => new { e.UserId, e.UsersToFollowId }, "IX_Following_UserId_UsersToFollowId");
+                entity.HasIndex(e => new { e.UserId, e.UserToFollowId }, "IX_Following_UserId_UsersToFollowId");
 
                 entity.Ignore(f => f.TweetsUser)
                 .HasMany(f => f.TweetsUser)

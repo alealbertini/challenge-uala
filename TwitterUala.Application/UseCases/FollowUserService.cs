@@ -32,7 +32,7 @@ namespace TwitterUala.Application.UseCases
 
             Following following = new Following();
             following.UserId = userId;
-            following.UsersToFollowId = userToFollowId;
+            following.UserToFollowId = userToFollowId;
 
             await _unitOfWork.GetRepository<Following>().Add(following);
             await _unitOfWork.SaveChangesAsync();

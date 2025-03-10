@@ -17,11 +17,11 @@ namespace TwitterUala.Migrations
                 columns: table => new
                 {
                     user_id = table.Column<long>(type: "bigint", nullable: false),
-                    users_to_follow_id = table.Column<long>(type: "bigint", nullable: false)
+                    user_to_follow_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_following", x => new { x.user_id, x.users_to_follow_id });
+                    table.PrimaryKey("PK_following", x => new { x.user_id, x.user_to_follow_id });
                 });
 
             migrationBuilder.CreateTable(
@@ -47,32 +47,32 @@ namespace TwitterUala.Migrations
                     tweet_message = table.Column<string>(type: "character varying(280)", maxLength: 280, nullable: false),
                     tweet_posted = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     FollowingUserId = table.Column<long>(type: "bigint", nullable: true),
-                    FollowingUsersToFollowId = table.Column<long>(type: "bigint", nullable: true)
+                    FollowingUserToFollowId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_tweet", x => x.id_tweet);
                     table.ForeignKey(
-                        name: "FK_tweet_following_FollowingUserId_FollowingUsersToFollowId",
-                        columns: x => new { x.FollowingUserId, x.FollowingUsersToFollowId },
+                        name: "FK_tweet_following_FollowingUserId_FollowingUserToFollowId",
+                        columns: x => new { x.FollowingUserId, x.FollowingUserToFollowId },
                         principalTable: "following",
-                        principalColumns: new[] { "user_id", "users_to_follow_id" });
+                        principalColumns: new[] { "user_id", "user_to_follow_id" });
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Following_UserId_UsersToFollowId",
                 table: "following",
-                columns: new[] { "user_id", "users_to_follow_id" });
+                columns: new[] { "user_id", "user_to_follow_id" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Following_UsersToFollowId",
                 table: "following",
-                column: "users_to_follow_id");
+                column: "user_to_follow_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_tweet_FollowingUserId_FollowingUsersToFollowId",
+                name: "IX_tweet_FollowingUserId_FollowingUserToFollowId",
                 table: "tweet",
-                columns: new[] { "FollowingUserId", "FollowingUsersToFollowId" });
+                columns: new[] { "FollowingUserId", "FollowingUserToFollowId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tweet_UserId",

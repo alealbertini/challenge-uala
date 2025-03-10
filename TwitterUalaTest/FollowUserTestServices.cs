@@ -60,7 +60,7 @@ namespace TwitterUalaTest
                 manager.FollowUserAsync(user, userToFollow);
 
                 // Assert
-                var addedItem = dbContext.Following.FirstOrDefault(x => x.UserId == user && x.UsersToFollowId == userToFollow);
+                var addedItem = dbContext.Following.FirstOrDefault(x => x.UserId == user && x.UserToFollowId == userToFollow);
                 Assert.IsNotNull(addedItem);
             }
         }
