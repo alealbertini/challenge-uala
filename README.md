@@ -26,7 +26,11 @@ docker run -d --name postgresDB -p 5432:5432 -e POSTGRES_PASSWORD=uala123 postgr
 ```
 Este comando levanta la imágen de docker donde "postgresDB" es el nombre del container y "postgres" es el nombre de la imágen de Docker.
 
-Luego, ejecutar el proyecto en Visual Studio. Se puede compilar y levantar con IIS Server o con Docker Container y consumir los endpoints a través del swagger que aparece al levantar la aplicación.
+Para verificar que la imágen de Docker este correctamente levantada, ejecutar el siguiente comando:
+```
+docker container ls
+```
+Luego, ejecutar el proyecto en Visual Studio. El archivo TwitterUala.sln para abrir la solución, se encuentra adentro de la carpeta TwitterUala. Se debe compilar y levantar con el profile Container (dockerfile) y se pueden consumir los endpoints a través del swagger que aparece al levantar la aplicación.
 
 Ayuda:
 Al levantar la aplicación, se ejecutarán los scripts de Migration que crearan el modelo de base de datos en el container de postgres. Si la base de datos no se creó al levantar el proyecto, ejecutar el siguiente comando en el Package Manager Console:
