@@ -1,4 +1,4 @@
-# challenge-uala
+# Challenge Ualá
 
 ## Inicio
 
