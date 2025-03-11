@@ -24,17 +24,17 @@ namespace TwitterUalaTest
             services.AddDbContext<TwitterDbContext>(options =>
                 options.UseInMemoryDatabase("TestDb"));
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-            services.AddScoped<DbContext, TwitterDbContext>();
+            services.AddSingleton<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+            services.AddSingleton<DbContext, TwitterDbContext>();
 
             services.AddLogging();
 
-            services.AddScoped<IFollowUserService, FollowUserService>();
-            services.AddScoped<IPublishTweetService, PublishTweetService>();
-            services.AddScoped<ITimelineService, TimelineService>();
-            services.AddScoped<ICreateUserService, CreateUserService>();
-            services.AddScoped<IFollowingRepository, FollowingRepository>();
+            services.AddSingleton<IFollowUserService, FollowUserService>();
+            services.AddSingleton<IPublishTweetService, PublishTweetService>();
+            services.AddSingleton<ITimelineService, TimelineService>();
+            services.AddSingleton<ICreateUserService, CreateUserService>();
+            services.AddSingleton<IFollowingRepository, FollowingRepository>();
 
             services.AddExceptionHandler<ExceptionHandler>();
 

@@ -16,15 +16,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<TwitterDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Default"), 
+builder.Services.AddDbContextFactory<TwitterDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Default"), 
     b =>
     {
         b.MigrationsAssembly(nameof(TwitterUala));
     }));
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-builder.Services.AddScoped<DbContext, TwitterDbContext>();
+builder.Services.AddSingleton<IUnitOfWork, UnitOfWork>();
+builder.Services.AddSingleton(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+builder.Services.AddSingleton<DbContext, TwitterDbContext>();
 
 builder.Services.AddScoped<IFollowUserService, FollowUserService>();
 builder.Services.AddScoped<IPublishTweetService, PublishTweetService>();

@@ -60,14 +60,19 @@ namespace TwitterUala.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Following_UserId_UsersToFollowId",
+                name: "IDX_Following_UserId_UsersToFollowId",
                 table: "following",
                 columns: new[] { "user_id", "user_to_follow_id" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Following_UsersToFollowId",
+                name: "IDX_Following_UsersToFollowId",
                 table: "following",
                 column: "user_to_follow_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IDX_Tweet_UserId",
+                table: "tweet",
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_tweet_FollowingUserId_FollowingUserToFollowId",
@@ -75,12 +80,7 @@ namespace TwitterUala.Migrations
                 columns: new[] { "FollowingUserId", "FollowingUserToFollowId" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tweet_UserId",
-                table: "tweet",
-                column: "user_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_IdUser",
+                name: "IDX_User_IdUser",
                 table: "user",
                 column: "id_user");
         }

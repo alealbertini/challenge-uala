@@ -39,9 +39,9 @@ namespace TwitterUala.Infrastructure
             {
                 entity.HasKey(f => new { f.UserId, f.UserToFollowId });
 
-                entity.HasIndex(e => e.UserToFollowId, "IX_Following_UsersToFollowId");
+                entity.HasIndex(e => e.UserToFollowId, "IDX_Following_UsersToFollowId");
 
-                entity.HasIndex(e => new { e.UserId, e.UserToFollowId }, "IX_Following_UserId_UsersToFollowId");
+                entity.HasIndex(e => new { e.UserId, e.UserToFollowId }, "IDX_Following_UserId_UsersToFollowId");
 
                 entity.Ignore(f => f.TweetsUser)
                 .HasMany(f => f.TweetsUser)
@@ -53,7 +53,7 @@ namespace TwitterUala.Infrastructure
             {
                 entity.HasKey(e => e.IdTweet);
 
-                entity.HasIndex(t => t.UserId, "IX_Tweet_UserId");
+                entity.HasIndex(t => t.UserId, "IDX_Tweet_UserId");
 
                 entity.Property(e => e.IdTweet)
                     .ValueGeneratedOnAdd();
@@ -66,7 +66,7 @@ namespace TwitterUala.Infrastructure
             {
                 entity.HasKey(e => e.IdUser);
 
-                entity.HasIndex(t => t.IdUser, "IX_User_IdUser");
+                entity.HasIndex(t => t.IdUser, "IDX_User_IdUser");
 
                 entity.Property(e => e.IdUser)
                     .ValueGeneratedOnAdd();

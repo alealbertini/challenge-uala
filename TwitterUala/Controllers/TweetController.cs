@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using TwitterUala.Application.Contracts.Applicaction;
 using TwitterUala.Application.Dtos.Out;
-using TwitterUala.Domain.Entities;
 
 namespace TwitterUala.Controllers
 {

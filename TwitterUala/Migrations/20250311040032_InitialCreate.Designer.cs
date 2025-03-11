@@ -12,7 +12,7 @@ using TwitterUala.Infrastructure;
 namespace TwitterUala.Migrations
 {
     [DbContext(typeof(TwitterDbContext))]
-    [Migration("20250310182537_InitialCreate")]
+    [Migration("20250311040032_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -37,9 +37,9 @@ namespace TwitterUala.Migrations
 
                     b.HasKey("UserId", "UserToFollowId");
 
-                    b.HasIndex(new[] { "UserId", "UserToFollowId" }, "IX_Following_UserId_UsersToFollowId");
+                    b.HasIndex(new[] { "UserId", "UserToFollowId" }, "IDX_Following_UserId_UsersToFollowId");
 
-                    b.HasIndex(new[] { "UserToFollowId" }, "IX_Following_UsersToFollowId");
+                    b.HasIndex(new[] { "UserToFollowId" }, "IDX_Following_UsersToFollowId");
 
                     b.ToTable("following", (string)null);
                 });
@@ -77,7 +77,7 @@ namespace TwitterUala.Migrations
 
                     b.HasIndex("FollowingUserId", "FollowingUserToFollowId");
 
-                    b.HasIndex(new[] { "UserId" }, "IX_Tweet_UserId");
+                    b.HasIndex(new[] { "UserId" }, "IDX_Tweet_UserId");
 
                     b.ToTable("tweet", (string)null);
                 });
@@ -99,7 +99,7 @@ namespace TwitterUala.Migrations
 
                     b.HasKey("IdUser");
 
-                    b.HasIndex(new[] { "IdUser" }, "IX_User_IdUser");
+                    b.HasIndex(new[] { "IdUser" }, "IDX_User_IdUser");
 
                     b.ToTable("user", (string)null);
                 });
