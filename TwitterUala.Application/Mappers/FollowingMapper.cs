@@ -10,7 +10,7 @@ namespace TwitterUala.Application.Mappers
             FollowingDto followingDto = new FollowingDto
             {
                 UserId = following.UserId,
-                UserToFollowId = following.UserId
+                UserToFollowId = following.UserToFollowId
             };
             return followingDto;
         }

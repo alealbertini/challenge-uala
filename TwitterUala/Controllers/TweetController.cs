@@ -25,10 +25,11 @@ namespace TwitterUala.Controllers
         }
 
         [HttpGet(Name = "TimelineByUserId")]
-        public async Task<List<Tweet>> TimelineByUserId(long userId)
+        public async Task<List<TweetOutDto>> TimelineByUserId(long userId)
         {
             _logger.LogInformation("Obtener tweets para el usuario: {0}", userId);
-            return await _tweetsFromFollowingByUserService.TimelineByUserIdAsync(userId);
+            var tweets = await _tweetsFromFollowingByUserService.TimelineByUserIdAsync(userId);
+            return tweets;
         }
     }
 }

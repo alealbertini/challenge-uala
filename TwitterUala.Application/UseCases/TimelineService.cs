@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using TwitterUala.Application.Contracts.Applicaction;
 using TwitterUala.Application.Contracts.Infrastructure;
+using TwitterUala.Application.Dtos.Out;
+using TwitterUala.Application.Mappers;
 using TwitterUala.Domain.Entities;
 
 namespace TwitterUala.Application.UseCases
@@ -11,13 +13,14 @@ namespace TwitterUala.Application.UseCases
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly ILogger<TimelineService> _logger = logger;
 
-        public async Task<List<Tweet>> TimelineByUserIdAsync(long userId)
+        public async Task<List<TweetOutDto>> TimelineByUserIdAsync(long userId)
         {
             await ExecValidationsAsync(userId);
 
             var tweets = _followingRepository.TweetsFromFollowingByUserId(userId).ToList();
             _logger.LogInformation("Se obtuvieron los tweets para el usuario: {0}", userId);
-            return tweets;
+            List<TweetOutDto> tweetsDto = TweetMapper.ToDtoList(tweets);
+            return tweetsDto;
         }
 
         private async Task ExecValidationsAsync(long userId)

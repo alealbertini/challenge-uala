@@ -15,5 +15,19 @@ namespace TwitterUala.Application.Mappers
             };
             return tweetDto;
         }
+
+        public static List<TweetOutDto> ToDtoList(List<Tweet> tweets)
+        {
+            List<TweetOutDto> tweetDto = new List<TweetOutDto>();
+            foreach(Tweet tweet in tweets)
+            {
+                tweetDto.Add(new TweetOutDto{
+                    UserId = tweet.UserId,
+                    TweetMessage = tweet.TweetMessage,
+                    TweetPosted = tweet.TweetPosted
+                });
+            };
+            return tweetDto;
+        }
     }
 }
