@@ -13,15 +13,20 @@ namespace TwitterUala.Application.UseCases
 
         public async Task<List<Tweet>> TimelineByUserIdAsync(long userId)
         {
+            await ExecValidationsAsync(userId);
+
+            var tweets = _followingRepository.TweetsFromFollowingByUserId(userId).ToList();
+            _logger.LogInformation("Se obtuvieron los tweets para el usuario: {0}", userId);
+            return tweets;
+        }
+
+        private async Task ExecValidationsAsync(long userId)
+        {
             var validUser = await _unitOfWork.GetRepository<User>().FirstOrDefaultAsync(u => u.IdUser == userId);
             if (validUser == null)
             {
                 throw new InvalidDataException("El usuario actual no es válido");
             }
-
-            var tweets = _followingRepository.TweetsFromFollowingByUserId(userId).ToList();
-            _logger.LogInformation("Se obtuvieron los tweets para el usuario: {0}", userId);
-            return tweets;
         }
     }
 }

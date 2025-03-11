@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using TwitterUala.Application.Contracts.Applicaction;
 using TwitterUala.Application.Dtos;
 
@@ -12,10 +13,10 @@ namespace TwitterUala.Controllers
         private readonly IFollowUserService _followUserService = followUserService;
 
         [HttpPost(Name = "FollowUser")]
-        public async Task<FollowingDto> FollowUserAsync(long userId, long userToFollowId)
+        public async Task<FollowingDto> FollowUserAsync(FollowingDto followingInDto)
         {
-            _logger.LogInformation("Usuario a insertar: Usuario: {0} Usuario a seguir: {1}", userId, userToFollowId);
-            FollowingDto followingDto = await _followUserService.FollowUserAsync(userId, userToFollowId);
+            _logger.LogInformation("Usuario a insertar: {0}", JsonConvert.SerializeObject(followingInDto));
+            FollowingDto followingDto = await _followUserService.FollowUserAsync(followingInDto);
             return followingDto;
         }
     }

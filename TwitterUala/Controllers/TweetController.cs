@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using TwitterUala.Application.Contracts.Applicaction;
-using TwitterUala.Application.Dtos;
+using TwitterUala.Application.Dtos.Out;
 using TwitterUala.Domain.Entities;
 
 namespace TwitterUala.Controllers
@@ -16,10 +17,10 @@ namespace TwitterUala.Controllers
         private readonly IPublishTweetService _publishTweetService = publishTweetService;
 
         [HttpPost(Name = "PublishTweet")]
-        public async Task<TweetDto> PublishTweetAsync(long userId, string tweetMessage)
+        public async Task<TweetOutDto> PublishTweetAsync(TweetInDto tweet)
         {
-            _logger.LogInformation("Se publicará el tweet {0} para el usuario: {1}", tweetMessage, userId);
-            TweetDto tweetDto = await _publishTweetService.PublishTweetAsync(userId, tweetMessage);
+            _logger.LogInformation("Se publicará el tweet {0} ", JsonConvert.SerializeObject(tweet));
+            TweetOutDto tweetDto = await _publishTweetService.PublishTweetAsync(tweet);
             return tweetDto;
         }
 

@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TwitterUala.Application.Contracts.Applicaction;
 using TwitterUala.Application.Contracts.Infrastructure;
+using TwitterUala.Application.Dtos;
+using TwitterUala.Application.Dtos.Out;
 using TwitterUala.Application.UseCases;
 using TwitterUala.Infrastructure;
 using TwitterUala.Infrastructure.Database;
@@ -55,7 +57,7 @@ namespace TwitterUalaTest
         }
 
         [TestMethod]
-        public void TimelineAsync_InsertOK()
+        public async Task TimelineAsync_InsertOKAsync()
         {
             using (var scope = _serviceProvider.CreateScope())
             {
@@ -65,42 +67,60 @@ namespace TwitterUalaTest
                 var managerFollowUser = scopedServices.GetRequiredService<IFollowUserService>();
                 var manager = scopedServices.GetRequiredService<ITimelineService>();
 
-                string usernameBenedicto = "Ernesto";
-                managerCreateUser.CreateUserAsync(usernameBenedicto);
+                UserInDto userInDto = new UserInDto();
+                userInDto.Username = "Ernesto";
+                managerCreateUser.CreateUserAsync(userInDto);
 
-                string usernameAmanda = "Olivia";
-                managerCreateUser.CreateUserAsync(usernameAmanda);
+                UserInDto userInDtoOlivia = new UserInDto();
+                userInDtoOlivia.Username = "Olivia";
+                managerCreateUser.CreateUserAsync(userInDtoOlivia);
 
-                long user = 3;
-                long userToFollow = 4;
-                managerFollowUser.FollowUserAsync(user, userToFollow);
+                FollowingDto followingDto = new FollowingDto();
+                followingDto.UserId = 1;
+                followingDto.UserToFollowId = 2;
+                managerFollowUser.FollowUserAsync(followingDto);
 
-                string message = "First Tweet";
-                managerPublishTweet.PublishTweetAsync(userToFollow, message).GetAwaiter().GetResult();
+                TweetInDto tweetInDto = new TweetInDto();
+                tweetInDto.UserId = 2;
+                tweetInDto.TweetMessage = "First Tweet";
+                await managerPublishTweet.PublishTweetAsync(tweetInDto);
 
-                var tweetsFromUser = manager.TimelineByUserIdAsync(user).GetAwaiter().GetResult();
+                var tweetsFromUser = await manager.TimelineByUserIdAsync(followingDto.UserId);
                 Assert.AreEqual(1, tweetsFromUser.Count);
-                Assert.AreEqual(tweetsFromUser[0].UserId, userToFollow);
-                Assert.AreEqual(tweetsFromUser[0].TweetMessage, message);
+                Assert.AreEqual(tweetsFromUser[0].UserId, tweetInDto.UserId);
+                Assert.AreEqual(tweetsFromUser[0].TweetMessage, tweetInDto.TweetMessage);
 
-                string secondMessage = "Second Tweet";
-                managerPublishTweet.PublishTweetAsync(userToFollow, secondMessage);
+                TweetInDto tweetInDto2 = new TweetInDto();
+                tweetInDto2.UserId = 2;
+                tweetInDto2.TweetMessage = "Second Tweet";
+                managerPublishTweet.PublishTweetAsync(tweetInDto2);
 
-                tweetsFromUser = manager.TimelineByUserIdAsync(user).GetAwaiter().GetResult();
+                tweetsFromUser = await manager.TimelineByUserIdAsync(followingDto.UserId);
                 Assert.AreEqual(2, tweetsFromUser.Count);
-                var existSecondMessage = tweetsFromUser.FirstOrDefault(t => t.UserId == userToFollow && t.TweetMessage == secondMessage);
+                var existSecondMessage = tweetsFromUser.FirstOrDefault(t => t.UserId == tweetInDto2.UserId && t.TweetMessage == tweetInDto2.TweetMessage);
                 Assert.IsNotNull(existSecondMessage);
 
-                string messageUser1 = "First Tweet from user 1";
-                managerPublishTweet.PublishTweetAsync(user, messageUser1);
+                TweetInDto tweetInDto3 = new TweetInDto();
+                tweetInDto3.UserId = 2;
+                tweetInDto3.TweetMessage = "Third Tweet from user 2";
+                managerPublishTweet.PublishTweetAsync(tweetInDto3);
 
-                tweetsFromUser = manager.TimelineByUserIdAsync(user).GetAwaiter().GetResult();
-                var tweetsFromUserToFollow = manager.TimelineByUserIdAsync(userToFollow).GetAwaiter().GetResult();
-                Assert.AreEqual(2, tweetsFromUser.Count);
+                tweetsFromUser = await manager.TimelineByUserIdAsync(followingDto.UserId);
+                var tweetsFromUserToFollow = await manager.TimelineByUserIdAsync(followingDto.UserToFollowId);
+                Assert.AreEqual(3, tweetsFromUser.Count);
                 Assert.AreEqual(0, tweetsFromUserToFollow.Count);
 
-                managerFollowUser.FollowUserAsync(userToFollow, user);
-                tweetsFromUserToFollow = manager.TimelineByUserIdAsync(userToFollow).GetAwaiter().GetResult();
+                FollowingDto followingDto1 = new FollowingDto();
+                followingDto1.UserId = 2;
+                followingDto1.UserToFollowId = 1;
+                managerFollowUser.FollowUserAsync(followingDto1);
+
+                TweetInDto tweetInDto4 = new TweetInDto();
+                tweetInDto4.UserId = 1;
+                tweetInDto4.TweetMessage = "First Tweet from user 1";
+                managerPublishTweet.PublishTweetAsync(tweetInDto4);
+
+                tweetsFromUserToFollow = await manager.TimelineByUserIdAsync(followingDto.UserToFollowId);
                 Assert.AreEqual(1, tweetsFromUserToFollow.Count);
             }
         }

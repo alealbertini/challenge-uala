@@ -1,6 +1,6 @@
-﻿namespace TwitterUala.Application.Dtos
+﻿namespace TwitterUala.Application.Dtos.Out
 {
-    public class UserDto
+    public class UserOutDto
     {
         public long IdUser { get; set; }
         public string Username { get; set; }

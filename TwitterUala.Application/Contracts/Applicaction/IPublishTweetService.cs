@@ -1,9 +1,9 @@
-﻿using TwitterUala.Application.Dtos;
+﻿using TwitterUala.Application.Dtos.Out;
 
 namespace TwitterUala.Application.Contracts.Applicaction
 {
     public interface IPublishTweetService
     {
-        Task<TweetDto> PublishTweetAsync(long userId, string tweetMessage);
+        Task<TweetOutDto> PublishTweetAsync(TweetInDto tweetInDto);
     }
 }

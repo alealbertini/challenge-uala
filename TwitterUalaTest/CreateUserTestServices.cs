@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TwitterUala.Application.Contracts.Applicaction;
 using TwitterUala.Application.Contracts.Infrastructure;
+using TwitterUala.Application.Dtos.Out;
 using TwitterUala.Application.UseCases;
 using TwitterUala.Infrastructure;
 using TwitterUala.Infrastructure.Database;
@@ -49,12 +50,13 @@ namespace TwitterUalaTest
                 var manager = scopedServices.GetRequiredService<ICreateUserService>();
                 var dbContext = scopedServices.GetRequiredService<TwitterDbContext>();
 
-                string username = "Benedicto";
-                manager.CreateUserAsync(username);
+                UserInDto userInDto = new UserInDto();
+                userInDto.Username = "Benedicto";
+                manager.CreateUserAsync(userInDto);
 
                 var addedItem = dbContext.User.Find((long)1);
                 Assert.IsNotNull(addedItem);
-                Assert.AreEqual(username, addedItem.Username);
+                Assert.AreEqual(userInDto.Username, addedItem.Username);
             }
         }
 
@@ -66,8 +68,9 @@ namespace TwitterUalaTest
                 var scopedServices = scope.ServiceProvider;
                 var manager = scopedServices.GetRequiredService<ICreateUserService>();
 
-                string username = "";
-                var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.CreateUserAsync(username));
+                UserInDto userInDto = new UserInDto();
+                userInDto.Username = "";
+                var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.CreateUserAsync(userInDto));
                 Assert.AreEqual("El nombre del usuario no puede ser vacío", exception.Message);
             }
         }
@@ -80,8 +83,9 @@ namespace TwitterUalaTest
                 var scopedServices = scope.ServiceProvider;
                 var manager = scopedServices.GetRequiredService<ICreateUserService>();
 
-                string longUsername = new string('a', 51);
-                var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.CreateUserAsync(longUsername));
+                UserInDto userInDto = new UserInDto();
+                userInDto.Username = new string('a', 51);
+                var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.CreateUserAsync(userInDto));
                 Assert.AreEqual("El nombre del usuario no puede ser mayor a 50 caracteres", exception.Message);
             }
         }
@@ -94,10 +98,11 @@ namespace TwitterUalaTest
                 var scopedServices = scope.ServiceProvider;
                 var manager = scopedServices.GetRequiredService<ICreateUserService>();
 
-                string username = "Benedicto";
-                await manager.CreateUserAsync(username);
+                UserInDto userInDto = new UserInDto();
+                userInDto.Username = "Benedicto";
+                await manager.CreateUserAsync(userInDto);
 
-                var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.CreateUserAsync(username));
+                var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.CreateUserAsync(userInDto));
                 Assert.AreEqual("Ya existe un usuario con el mismo nombre de usuario", exception.Message);
             }
         }

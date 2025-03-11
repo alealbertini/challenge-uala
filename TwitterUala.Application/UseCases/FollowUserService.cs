@@ -13,13 +13,13 @@ namespace TwitterUala.Application.UseCases
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly ILogger<FollowUserService> _logger = logger;
 
-        public async Task<FollowingDto> FollowUserAsync(long userId, long userToFollowId)
+        public async Task<FollowingDto> FollowUserAsync(FollowingDto followingInDto)
         {
-            await ExecValidationsAsync(userId, userToFollowId);
+            await ExecValidationsAsync(followingInDto.UserId, followingInDto.UserToFollowId);
 
             Following following = new Following();
-            following.UserId = userId;
-            following.UserToFollowId = userToFollowId;
+            following.UserId = followingInDto.UserId;
+            following.UserToFollowId = followingInDto.UserToFollowId;
 
             await _unitOfWork.GetRepository<Following>().Add(following);
             await _unitOfWork.SaveChangesAsync();

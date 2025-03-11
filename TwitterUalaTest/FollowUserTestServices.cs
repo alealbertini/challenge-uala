@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TwitterUala.Application.Contracts.Applicaction;
 using TwitterUala.Application.Contracts.Infrastructure;
+using TwitterUala.Application.Dtos;
+using TwitterUala.Application.Dtos.Out;
 using TwitterUala.Application.UseCases;
 using TwitterUala.Infrastructure;
 using TwitterUala.Infrastructure.Database;
@@ -50,18 +52,21 @@ namespace TwitterUalaTest
                 var managerCreateUser = scopedServices.GetRequiredService<ICreateUserService>();
                 var dbContext = scopedServices.GetRequiredService<TwitterDbContext>();
 
-                string usernameBenedicto = "Benedicto";
-                managerCreateUser.CreateUserAsync(usernameBenedicto);
+                UserInDto userInDto = new UserInDto();
+                userInDto.Username = "Benedicto";
+                managerCreateUser.CreateUserAsync(userInDto);
 
-                string usernameAmanda = "Amanda";
-                managerCreateUser.CreateUserAsync(usernameAmanda);
+                UserInDto userInDtoAmanda = new UserInDto();
+                userInDto.Username = "Amanda";
+                managerCreateUser.CreateUserAsync(userInDtoAmanda);
 
-                long user = 1;
-                long userToFollow = 2;
-                manager.FollowUserAsync(user, userToFollow);
+                FollowingDto followingDto = new FollowingDto();
+                followingDto.UserId = 1;
+                followingDto.UserToFollowId = 2;
+                manager.FollowUserAsync(followingDto);
 
                 // Assert
-                var addedItem = dbContext.Following.FirstOrDefault(x => x.UserId == user && x.UserToFollowId == userToFollow);
+                var addedItem = dbContext.Following.FirstOrDefault(x => x.UserId == followingDto.UserId && x.UserToFollowId == followingDto.UserToFollowId);
                 Assert.IsNotNull(addedItem);
             }
         }
@@ -74,9 +79,10 @@ namespace TwitterUalaTest
                 var scopedServices = scope.ServiceProvider;
                 var manager = scopedServices.GetRequiredService<IFollowUserService>();
 
-                long user = 11111;
-                long userToFollow = 2;
-                var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.FollowUserAsync(user, userToFollow));
+                FollowingDto followingDto = new FollowingDto();
+                followingDto.UserId = 11111;
+                followingDto.UserToFollowId = 2;
+                var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.FollowUserAsync(followingDto));
                 Assert.AreEqual("El usuario actual no es válido", exception.Message);
             }
         }
@@ -90,12 +96,14 @@ namespace TwitterUalaTest
                 var manager = scopedServices.GetRequiredService<IFollowUserService>();
                 var managerCreateUser = scopedServices.GetRequiredService<ICreateUserService>();
 
-                string usernameRaul = "Raul";
-                await managerCreateUser.CreateUserAsync(usernameRaul);
+                UserInDto userInDto = new UserInDto();
+                userInDto.Username = "Raul";
+                await managerCreateUser.CreateUserAsync(userInDto);
 
-                long user = 1;
-                long userToFollow = 222222;
-                var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.FollowUserAsync(user, userToFollow));
+                FollowingDto followingDto = new FollowingDto();
+                followingDto.UserId = 1;
+                followingDto.UserToFollowId = 222222;
+                var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.FollowUserAsync(followingDto));
                 Assert.AreEqual("El usuario a seguir no es válido", exception.Message);
             }
         }
@@ -109,13 +117,14 @@ namespace TwitterUalaTest
                 var manager = scopedServices.GetRequiredService<IFollowUserService>();
                 var managerCreateUser = scopedServices.GetRequiredService<ICreateUserService>();
 
-                string usernameSebastian = "Sebastian";
-                await managerCreateUser.CreateUserAsync(usernameSebastian);
+                UserInDto userInDto = new UserInDto();
+                userInDto.Username = "Sebastian";
+                await managerCreateUser.CreateUserAsync(userInDto);
 
-                long user = 1;
-                long userToFollow = 1;
-
-                var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.FollowUserAsync(user, userToFollow));
+                FollowingDto followingDto = new FollowingDto();
+                followingDto.UserId = 1;
+                followingDto.UserToFollowId = 1;
+                var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.FollowUserAsync(followingDto));
                 Assert.AreEqual("El usuario actual no puede seguirse a si mismo", exception.Message);
             }
         }

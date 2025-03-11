@@ -1,13 +1,13 @@
-﻿using TwitterUala.Application.Dtos;
+﻿using TwitterUala.Application.Dtos.Out;
 using TwitterUala.Domain.Entities;
 
 namespace TwitterUala.Application.Mappers
 {
     public static class TweetMapper
     {
-        public static TweetDto ToDto(Tweet tweet)
+        public static TweetOutDto ToDto(Tweet tweet)
         {
-            TweetDto tweetDto = new TweetDto
+            TweetOutDto tweetDto = new TweetOutDto
             {
                 UserId = tweet.UserId,
                 TweetMessage = tweet.TweetMessage,
