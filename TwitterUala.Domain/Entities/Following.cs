@@ -4,6 +4,6 @@
     {
         public long UserId { get; set; }
         public long UserToFollowId { get; set; }
-        public virtual HashSet<Tweet> TweetsUser { get; set; }
+        public virtual User User { get; set; }
     }
 }

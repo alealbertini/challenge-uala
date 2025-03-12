@@ -33,31 +33,29 @@ namespace TwitterUala.Infrastructure
                 modelBuilder.Entity(table).ToTable(ToUnderscoreLowerCase(table.Name));
             }
 
-            modelBuilder.Entity<Tweet>().Ignore(t => t.Following);
+            modelBuilder.Entity<User>().Ignore(f => f.Followings);
 
             modelBuilder.Entity<Following>(entity =>
             {
+                entity.Ignore(f => f.User);
+
                 entity.HasKey(f => new { f.UserId, f.UserToFollowId });
 
-                entity.HasIndex(e => e.UserToFollowId, "IDX_Following_UsersToFollowId");
-
-                entity.HasIndex(e => new { e.UserId, e.UserToFollowId }, "IDX_Following_UserId_UsersToFollowId");
-
-                entity.Ignore(f => f.TweetsUser)
-                .HasMany(f => f.TweetsUser)
-                .WithOne(t => t.Following)
-                .HasForeignKey(t => t.UserId);
+                entity
+                    .HasOne(f => f.User)
+                    .WithMany(u => u.Followings)
+                    .HasForeignKey(f => f.UserId);
             });
 
             modelBuilder.Entity<Tweet>(entity =>
             {
                 entity.HasKey(e => e.IdTweet);
 
-                entity.HasIndex(t => t.UserId, "IDX_Tweet_UserId");
+                entity.HasIndex(t => t.UserTweet, "IDX_Tweet_UserToFollowId");
 
                 entity.Property(e => e.IdTweet)
                     .ValueGeneratedOnAdd();
-                entity.Ignore(t => t.Following);
+
                 entity.Property(e => e.TweetMessage)
                     .HasMaxLength(280);
             });
@@ -65,8 +63,6 @@ namespace TwitterUala.Infrastructure
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(e => e.IdUser);
-
-                entity.HasIndex(t => t.IdUser, "IDX_User_IdUser");
 
                 entity.Property(e => e.IdUser)
                     .ValueGeneratedOnAdd();

@@ -34,10 +34,6 @@ namespace TwitterUala.Migrations
 
                     b.HasKey("UserId", "UserToFollowId");
 
-                    b.HasIndex(new[] { "UserId", "UserToFollowId" }, "IDX_Following_UserId_UsersToFollowId");
-
-                    b.HasIndex(new[] { "UserToFollowId" }, "IDX_Following_UsersToFollowId");
-
                     b.ToTable("following", (string)null);
                 });
 
@@ -50,12 +46,6 @@ namespace TwitterUala.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("IdTweet"));
 
-                    b.Property<long?>("FollowingUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("FollowingUserToFollowId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("TweetMessage")
                         .IsRequired()
                         .HasMaxLength(280)
@@ -66,15 +56,13 @@ namespace TwitterUala.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("tweet_posted");
 
-                    b.Property<long>("UserId")
+                    b.Property<long>("UserTweet")
                         .HasColumnType("bigint")
-                        .HasColumnName("user_id");
+                        .HasColumnName("user_tweet");
 
                     b.HasKey("IdTweet");
 
-                    b.HasIndex("FollowingUserId", "FollowingUserToFollowId");
-
-                    b.HasIndex(new[] { "UserId" }, "IDX_Tweet_UserId");
+                    b.HasIndex(new[] { "UserTweet" }, "IDX_Tweet_UserToFollowId");
 
                     b.ToTable("tweet", (string)null);
                 });
@@ -96,21 +84,23 @@ namespace TwitterUala.Migrations
 
                     b.HasKey("IdUser");
 
-                    b.HasIndex(new[] { "IdUser" }, "IDX_User_IdUser");
-
                     b.ToTable("user", (string)null);
-                });
-
-            modelBuilder.Entity("TwitterUala.Domain.Entities.Tweet", b =>
-                {
-                    b.HasOne("TwitterUala.Domain.Entities.Following", null)
-                        .WithMany("TweetsUser")
-                        .HasForeignKey("FollowingUserId", "FollowingUserToFollowId");
                 });
 
             modelBuilder.Entity("TwitterUala.Domain.Entities.Following", b =>
                 {
-                    b.Navigation("TweetsUser");
+                    b.HasOne("TwitterUala.Domain.Entities.User", "User")
+                        .WithMany("Followings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TwitterUala.Domain.Entities.User", b =>
+                {
+                    b.Navigation("Followings");
                 });
 #pragma warning restore 612, 618
         }

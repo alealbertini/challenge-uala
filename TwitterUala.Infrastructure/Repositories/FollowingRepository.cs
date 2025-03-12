@@ -11,7 +11,7 @@ namespace TwitterUala.Infrastructure.Repositories
         public IEnumerable<Tweet> TweetsFromFollowingByUserId(long userId)
         {
             var tweetsByUser = from following in _dbContext.Following
-                               join tweet in _dbContext.Tweet on following.UserToFollowId equals tweet.UserId
+                               join tweet in _dbContext.Tweet on following.UserToFollowId equals tweet.UserTweet
                                where following.UserId == userId
                                orderby tweet.TweetPosted ascending
                                select tweet;

@@ -9,7 +9,7 @@ namespace TwitterUala.Application.Mappers
         {
             TweetOutDto tweetDto = new TweetOutDto
             {
-                UserId = tweet.UserId,
+                UserTweet = tweet.UserTweet,
                 TweetMessage = tweet.TweetMessage,
                 TweetPosted = tweet.TweetPosted
             };
@@ -22,7 +22,7 @@ namespace TwitterUala.Application.Mappers
             foreach(Tweet tweet in tweets)
             {
                 tweetDto.Add(new TweetOutDto{
-                    UserId = tweet.UserId,
+                    UserTweet = tweet.UserTweet,
                     TweetMessage = tweet.TweetMessage,
                     TweetPosted = tweet.TweetPosted
                 });

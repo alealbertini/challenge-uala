@@ -81,27 +81,27 @@ namespace TwitterUalaTest
                 managerFollowUser.FollowUserAsync(followingDto);
 
                 TweetInDto tweetInDto = new TweetInDto();
-                tweetInDto.UserId = 2;
+                tweetInDto.UserTweet = 2;
                 tweetInDto.TweetMessage = "First Tweet";
                 await managerPublishTweet.PublishTweetAsync(tweetInDto);
 
                 var tweetsFromUser = await manager.TimelineByUserIdAsync(followingDto.UserId);
                 Assert.AreEqual(1, tweetsFromUser.Count);
-                Assert.AreEqual(tweetsFromUser[0].UserId, tweetInDto.UserId);
+                Assert.AreEqual(tweetsFromUser[0].UserTweet, tweetInDto.UserTweet);
                 Assert.AreEqual(tweetsFromUser[0].TweetMessage, tweetInDto.TweetMessage);
 
                 TweetInDto tweetInDto2 = new TweetInDto();
-                tweetInDto2.UserId = 2;
+                tweetInDto2.UserTweet = 2;
                 tweetInDto2.TweetMessage = "Second Tweet";
                 managerPublishTweet.PublishTweetAsync(tweetInDto2);
 
                 tweetsFromUser = await manager.TimelineByUserIdAsync(followingDto.UserId);
                 Assert.AreEqual(2, tweetsFromUser.Count);
-                var existSecondMessage = tweetsFromUser.FirstOrDefault(t => t.UserId == tweetInDto2.UserId && t.TweetMessage == tweetInDto2.TweetMessage);
+                var existSecondMessage = tweetsFromUser.FirstOrDefault(t => t.UserTweet == tweetInDto2.UserTweet && t.TweetMessage == tweetInDto2.TweetMessage);
                 Assert.IsNotNull(existSecondMessage);
 
                 TweetInDto tweetInDto3 = new TweetInDto();
-                tweetInDto3.UserId = 2;
+                tweetInDto3.UserTweet = 2;
                 tweetInDto3.TweetMessage = "Third Tweet from user 2";
                 managerPublishTweet.PublishTweetAsync(tweetInDto3);
 
@@ -116,7 +116,7 @@ namespace TwitterUalaTest
                 managerFollowUser.FollowUserAsync(followingDto1);
 
                 TweetInDto tweetInDto4 = new TweetInDto();
-                tweetInDto4.UserId = 1;
+                tweetInDto4.UserTweet = 1;
                 tweetInDto4.TweetMessage = "First Tweet from user 1";
                 managerPublishTweet.PublishTweetAsync(tweetInDto4);
 

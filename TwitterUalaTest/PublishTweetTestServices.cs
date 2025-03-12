@@ -67,7 +67,7 @@ namespace TwitterUalaTest
                 managerFollowUser.FollowUserAsync(followingDto);
 
                 TweetInDto tweetInDto = new TweetInDto();
-                tweetInDto.UserId = 2;
+                tweetInDto.UserTweet = 2;
                 tweetInDto.TweetMessage = "First Tweet";
                 manager.PublishTweetAsync(tweetInDto);
 
@@ -86,7 +86,7 @@ namespace TwitterUalaTest
                 var manager = scopedServices.GetRequiredService<IPublishTweetService>();
 
                 TweetInDto tweetInDto = new TweetInDto();
-                tweetInDto.UserId = 1111111;
+                tweetInDto.UserTweet = 1111111;
                 tweetInDto.TweetMessage = "First Tweet";
 
                 var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.PublishTweetAsync(tweetInDto));
@@ -108,7 +108,7 @@ namespace TwitterUalaTest
                 await managerCreateUser.CreateUserAsync(userInDto);
 
                 TweetInDto tweetInDto = new TweetInDto();
-                tweetInDto.UserId = 1;
+                tweetInDto.UserTweet = 1;
                 tweetInDto.TweetMessage = "";
 
                 var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.PublishTweetAsync(tweetInDto));
@@ -130,7 +130,7 @@ namespace TwitterUalaTest
                 await managerCreateUser.CreateUserAsync(userInDto);
 
                 TweetInDto tweetInDto = new TweetInDto();
-                tweetInDto.UserId = 1;
+                tweetInDto.UserTweet = 1;
                 tweetInDto.TweetMessage = new string('a', 281);
 
                 var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.PublishTweetAsync(tweetInDto));

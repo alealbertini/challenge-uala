@@ -23,7 +23,7 @@ namespace TwitterUala.Application.UseCases
 
             await _unitOfWork.GetRepository<Following>().Add(following);
             await _unitOfWork.SaveChangesAsync();
-            _logger.LogInformation("Usuario seguido: {0}", JsonConvert.SerializeObject(following));
+            _logger.LogInformation("Usuario: {0} acaba de seguir a usuario: {1}", following.UserId, following.UserToFollowId);
 
             FollowingDto followingDto = FollowingMapper.ToDto(following);
             return followingDto;
@@ -46,6 +46,12 @@ namespace TwitterUala.Application.UseCases
             if (userId == userToFollowId)
             {
                 throw new InvalidDataException("El usuario actual no puede seguirse a si mismo");
+            }
+
+            var validFollowing = await _unitOfWork.GetRepository<Following>().FirstOrDefaultAsync(u => u.UserId == userId && u.UserToFollowId == userToFollowId);
+            if (validFollowing != null)
+            {
+                throw new InvalidDataException("El usuario actual ya esta siguiendo al usuario a seguir");
             }
         }
     }

@@ -57,7 +57,7 @@ namespace TwitterUalaTest
                 managerCreateUser.CreateUserAsync(userInDto);
 
                 UserInDto userInDtoAmanda = new UserInDto();
-                userInDto.Username = "Amanda";
+                userInDtoAmanda.Username = "Amanda";
                 managerCreateUser.CreateUserAsync(userInDtoAmanda);
 
                 FollowingDto followingDto = new FollowingDto();
@@ -65,7 +65,6 @@ namespace TwitterUalaTest
                 followingDto.UserToFollowId = 2;
                 manager.FollowUserAsync(followingDto);
 
-                // Assert
                 var addedItem = dbContext.Following.FirstOrDefault(x => x.UserId == followingDto.UserId && x.UserToFollowId == followingDto.UserToFollowId);
                 Assert.IsNotNull(addedItem);
             }
@@ -126,6 +125,36 @@ namespace TwitterUalaTest
                 followingDto.UserToFollowId = 1;
                 var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.FollowUserAsync(followingDto));
                 Assert.AreEqual("El usuario actual no puede seguirse a si mismo", exception.Message);
+            }
+        }
+
+        [TestMethod]
+        public async Task FollowUserAsync_ThrowsInvalidDataException_WhenUserTryToFollowTheSameUserAgainAsync()
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var scopedServices = scope.ServiceProvider;
+                var manager = scopedServices.GetRequiredService<IFollowUserService>();
+                var managerCreateUser = scopedServices.GetRequiredService<ICreateUserService>();
+                var dbContext = scopedServices.GetRequiredService<TwitterDbContext>();
+
+                UserInDto userInDto = new UserInDto();
+                userInDto.Username = "Benedicto";
+                managerCreateUser.CreateUserAsync(userInDto);
+
+                UserInDto userInDtoAmanda = new UserInDto();
+                userInDtoAmanda.Username = "Amanda";
+                managerCreateUser.CreateUserAsync(userInDtoAmanda);
+
+                FollowingDto followingDto = new FollowingDto();
+                followingDto.UserId = 1;
+                followingDto.UserToFollowId = 2;
+                manager.FollowUserAsync(followingDto);
+
+                manager.FollowUserAsync(followingDto);
+
+                var exception = await Assert.ThrowsExceptionAsync<InvalidDataException>(() => manager.FollowUserAsync(followingDto));
+                Assert.AreEqual("El usuario actual ya esta siguiendo al usuario a seguir", exception.Message);
             }
         }
     }

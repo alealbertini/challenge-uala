@@ -2,7 +2,7 @@
 {
     public class TweetInDto
     {
-        public long UserId { get; set; }
+        public long UserTweet { get; set; }
         public string TweetMessage { get; set; }
     }
 }

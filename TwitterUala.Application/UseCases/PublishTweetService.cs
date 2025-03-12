@@ -18,7 +18,7 @@ namespace TwitterUala.Application.UseCases
             await ExecValidationsAsync(tweetInDto);
 
             Tweet tweet = new Tweet();
-            tweet.UserId = tweetInDto.UserId;
+            tweet.UserTweet = tweetInDto.UserTweet;
             tweet.TweetMessage = tweetInDto.TweetMessage;
             tweet.TweetPosted = DateTime.UtcNow;
 
@@ -32,7 +32,7 @@ namespace TwitterUala.Application.UseCases
 
         private async Task ExecValidationsAsync(TweetInDto tweetInDto)
         {
-            var validUser = await _unitOfWork.GetRepository<User>().FirstOrDefaultAsync(u => u.IdUser == tweetInDto.UserId);
+            var validUser = await _unitOfWork.GetRepository<User>().FirstOrDefaultAsync(u => u.IdUser == tweetInDto.UserTweet);
             if (validUser == null)
             {
                 throw new InvalidDataException("El usuario actual no es valido");

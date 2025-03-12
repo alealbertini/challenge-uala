@@ -22,7 +22,7 @@ namespace TwitterUala.Application.UseCases
 
             await _unitOfWork.GetRepository<User>().Add(user);
             await _unitOfWork.SaveChangesAsync();
-            _logger.LogInformation("Usuario insertado: {0}", JsonConvert.SerializeObject(user));
+            _logger.LogInformation("Usuario insertado: {0}", user.Username);
 
             UserOutDto userDto = UserMapper.ToDto(user);
             return userDto;
